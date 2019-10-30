@@ -1,2 +1,2 @@
-# kirk_jamie_rust_text_adv
+# Rust text adventure Kirk & Jamie
 A text adventure built in rust
