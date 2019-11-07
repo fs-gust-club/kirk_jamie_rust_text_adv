@@ -13,8 +13,7 @@ fn go(direction: &str, player: &mut Person, dungeon: &Vec<Room> ) {
 
     player.change_room(destinations.to_string());
 
-    println!("{}",curr_room.doors[0].name);
-    println!("{}", destinations);
+    println!("You are in {}, You can go to {}",curr_room.doors[0].name, destinations);
 
 }
 
@@ -33,10 +32,10 @@ fn main() {
     println!("Hi {}", player.name);
 
     let mut dungeon = Vec::new();
-    dungeon.push(Room::new("North".to_string(), vec![Door::new("West","West"), Door::new("South","South")]));
-    dungeon.push(Room::new("West".to_string(), vec![Door::new("North","East")]));
-    dungeon.push(Room::new("East".to_string(), vec![Door::new("West","South")]));
-    dungeon.push(Room::new("South".to_string(), vec![Door::new("East","East"), Door::new("North","North")]));
+    dungeon.push(Room::new("North".to_string(), vec![Door::new("Forest","West"), Door::new("Desert","South")]));
+    dungeon.push(Room::new("West".to_string(), vec![Door::new("Castle","East")]));
+    dungeon.push(Room::new("East".to_string(), vec![Door::new("Desert","South")]));
+    dungeon.push(Room::new("South".to_string(), vec![Door::new("Swamp","East"), Door::new("Forest","North")]));
     loop {
         let mut command = String::new(); 
         println!("Enter your choice");
