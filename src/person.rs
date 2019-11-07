@@ -10,4 +10,8 @@ impl Person{
             current_room: room,
         }
     }
+
+    pub fn change_room(&mut self, new_room: String){
+        self.current_room = new_room;
+    }
 }

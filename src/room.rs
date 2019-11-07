@@ -10,8 +10,14 @@ impl<'a> Room<'a>{
             doors: doors,
         }
     }
-}
 
+    pub fn find_exits(&self, direction: &str) -> &str{
+        let mut destinations = IntoIterator::into_iter(self.doors.to_vec());
+        let destination = destinations.find(move |door_dir| door_dir.direction == direction).unwrap();
+        return destination.direction;
+    }
+}
+#[derive(Clone, Copy)]
 pub struct Door<'a>{
     pub name: &'a str,
     pub direction: &'a str

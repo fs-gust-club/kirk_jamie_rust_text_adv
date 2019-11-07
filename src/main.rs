@@ -6,22 +6,20 @@ use crate::room::{Room,Door};
 use crate::person::{Person};
 
 
-fn go(direction: &str, player: &Person, dungeon: &Vec<Room> ) {
-    // match direction.to_lowercase().trim() {
-    //         "north" => change_room(direction),
-    //         "south" => println!("You Went South"),
-    //         "west" => println!("You Went West"),
-    //         "east" => println!("You Went East"),
-    //         _ => println!("Cannot do that: {}", direction),
-    //     }s
+fn go(direction: &str, player: &mut Person, dungeon: &Vec<Room> ) {
     let mut rooms = IntoIterator::into_iter(dungeon);
-    let room = rooms.find(|&room| room.name == player.current_room).unwrap();
-    let mut destinations = IntoIterator::into_iter(room.doors);
-    let destination = destinations.find(move |&door_dir| door_dir.direction == direction).unwrap();
+    let curr_room = rooms.find(|&room| room.name == player.current_room).unwrap();
+    let destinations = curr_room.find_exits(direction);
 
-    println!("{}",room.doors[0].name);
-    println!("{}", destination.direction);
+    player.change_room(destinations.to_string());
 
+    println!("{}",curr_room.doors[0].name);
+    println!("{}", destinations);
+
+}
+
+fn where_am_i(player: &Person) {
+    println!("You are in the {} room.", player.current_room);
 }
 
 
@@ -36,8 +34,8 @@ fn main() {
 
     let mut dungeon = Vec::new();
     dungeon.push(Room::new("North".to_string(), vec![Door::new("West","West"), Door::new("South","South")]));
-    dungeon.push(Room::new("West".to_string(), vec![Door::new("North","North")]));
-    dungeon.push(Room::new("East".to_string(), vec![Door::new("South","South")]));
+    dungeon.push(Room::new("West".to_string(), vec![Door::new("North","East")]));
+    dungeon.push(Room::new("East".to_string(), vec![Door::new("West","South")]));
     dungeon.push(Room::new("South".to_string(), vec![Door::new("East","East"), Door::new("North","North")]));
     loop {
         let mut command = String::new(); 
@@ -51,7 +49,8 @@ fn main() {
         let object = commands.get(1).unwrap_or(&"");
 
         match action.trim() {
-            "go" => go(object,&player, &dungeon),
+            "go" => go(object, &mut player, &dungeon),
+            "where" => where_am_i(&player),
             "quit" => break,
             _ => println!("Cannot do that: {}", object),
         }
