@@ -11,10 +11,10 @@ impl<'a> Room<'a>{
         }
     }
 
-    pub fn find_exits(&self, direction: &str) -> &str{
-        let mut destinations = IntoIterator::into_iter(self.doors.to_vec());
-        let destination = destinations.find(move |door_dir| door_dir.direction == direction).unwrap();
-        return destination.direction;
+    pub fn find_exits(&self) -> Vec<&str> {
+        let destinations = IntoIterator::into_iter(self.doors.to_vec());
+        let destinations: Vec<&str> = destinations.map(|x| x.name).collect();
+        return destinations;
     }
 }
 #[derive(Clone, Copy)]
