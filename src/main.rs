@@ -1,26 +1,27 @@
 use std::io;
 mod person;
 mod room;
+mod item;
 use std::collections::HashMap;
 
 use crate::room::{Room,Door};
+use crate::item::Item;
 use crate::person::{Person};
 use itertools::join;
-#[macro_use]
-extern crate nom;
 
-use nom::{alpha, space};
-
-fn go<'a> (direction: &str, player: &mut Person, dungeon: &mut HashMap<String, Room>) {
-    
+fn go<'a> (mut commands: Vec<&str>, player: &mut Person, dungeon: &mut HashMap<String, Room>) {
+    let direction: String = commands.remove(0).to_string().to_lowercase();
     if dungeon.contains_key::<str>(&direction) {
         player.change_room(&dungeon [&direction.to_string()].name);
 
         let curr_room = &dungeon [&direction.to_string()];
         let exits = curr_room.find_exits();
         let exit_str: String = join(exits.into_iter(),", ");
-
+        let items = curr_room.find_items();
+        
+        let item_str: String = join(items.into_iter(),", ");
         println!("You are in {}, You can go to {}.", player.current_room, exit_str);
+        println!("You can see {}", item_str);
     }
     else {
         println!("No exit that direction")
@@ -64,6 +65,7 @@ fn main() {
                 Door::new("Desert","West"),
             ]),
     );
+    dungeon.get_mut("desert").unwrap().add_Item(Item::new("sword".to_string(),true, 10));
     let mut name = String::new(); 
         println!("What is your name: ");
         io::stdin().read_line(&mut name)
@@ -77,26 +79,16 @@ fn main() {
         println!("Enter your choice");
         io::stdin().read_line(&mut command)
             .ok()
-            .expect("failed to read line");
+            .expect("failed to read line");     
 
-        named!(pub name_parser(&str) -> &str,
-            chain!
-                ( tag_s!("hello")
-                ~ space?
-                ~ name: alpha
-                , || name
-            )
-        );
+        let mut commands:Vec<&str> = command.split_whitespace().collect();
+        let action = commands.remove(0);
 
-        // let commands:Vec<&str> = command.split_whitespace().collect();
-        // let action = commands.get(0).unwrap_or(&"").to_lowercase();
-        // let object = commands.get(1).unwrap_or(&"");
-
-        // match action.trim() {
-        //     "go" => go(object, &mut player, &mut dungeon),
-        //     "where" => where_am_i(&player),
-        //     "quit" => break,
-        //     _ => println!("Cannot do that: {}", object),
-        // }
+        match action.trim() {
+            "go" => go(commands, &mut player, &mut dungeon),
+            "where" => where_am_i(&player),
+            "quit" => break,
+            _ => println!("Cannot do that: {}", action),
+        }
     }
 }
