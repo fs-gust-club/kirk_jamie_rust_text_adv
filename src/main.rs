@@ -32,6 +32,13 @@ fn where_am_i(player: &Person) {
     println!("You are in the {} room.", player.current_room);
 }
 
+fn get_item<'a> (mut commands: Vec<&str>, player: &mut Person, dungeon: &mut HashMap<String, Room>) {
+    let item_name = commands[0];
+    let room = &player.current_room;
+    let item = dungeon.get(&room).unwrap().remove_Item(item_name);
+    player.take_item(item)
+}
+
 
 fn main() {
     let mut dungeon = HashMap::new();
@@ -87,6 +94,7 @@ fn main() {
         match action.trim() {
             "go" => go(commands, &mut player, &mut dungeon),
             "where" => where_am_i(&player),
+            "take" => get_item(commands, &mut player, &mut dungeon),
             "quit" => break,
             _ => println!("Cannot do that: {}", action),
         }

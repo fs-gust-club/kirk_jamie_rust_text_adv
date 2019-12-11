@@ -19,6 +19,11 @@ impl<'a> Room<'a>{
         self.items.push(item)
     }
 
+    pub fn remove_Item(&mut self, item_name: &str) -> Item {
+        let index = self.items.iter().position(|x| *x.name == item_name.to_string()).unwrap();
+        return self.items.remove(index);
+    }
+
     pub fn find_exits(&self) -> Vec<&str> {
         let destinations = IntoIterator::into_iter(self.doors.to_vec());
         let destinations: Vec<&str> = destinations.map(|x| x.name).collect();
