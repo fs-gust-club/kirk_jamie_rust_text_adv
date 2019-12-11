@@ -35,7 +35,9 @@ fn where_am_i(player: &Person) {
 fn get_item<'a> (mut commands: Vec<&str>, player: &mut Person, dungeon: &mut HashMap<String, Room>) {
     let item_name = commands[0];
     let room_name = &player.current_room;
-    let current_room = dungeon.get_mut(room_name).unwrap();
+    println!("current room: {}", room_name);
+    let current_room = dungeon.get_mut(&room_name.to_string().to_lowercase()).unwrap();
+    
     let room_item = current_room.remove_Item(item_name);
     player.take_item(room_item)
 }
