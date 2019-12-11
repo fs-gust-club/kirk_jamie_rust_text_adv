@@ -34,9 +34,10 @@ fn where_am_i(player: &Person) {
 
 fn get_item<'a> (mut commands: Vec<&str>, player: &mut Person, dungeon: &mut HashMap<String, Room>) {
     let item_name = commands[0];
-    let room = &player.current_room;
-    let item = dungeon.get(&room).unwrap().remove_Item(item_name);
-    player.take_item(item)
+    let room_name = &player.current_room;
+    let current_room = dungeon.get_mut(room_name).unwrap();
+    let room_item = current_room.remove_Item(item_name);
+    player.take_item(room_item)
 }
 
 
@@ -95,6 +96,7 @@ fn main() {
             "go" => go(commands, &mut player, &mut dungeon),
             "where" => where_am_i(&player),
             "take" => get_item(commands, &mut player, &mut dungeon),
+            "inventory" => player.inventory(),
             "quit" => break,
             _ => println!("Cannot do that: {}", action),
         }
